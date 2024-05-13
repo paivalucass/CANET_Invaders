@@ -1,0 +1,116 @@
+VERSION ""
+
+
+NS_ : 
+		NS_DESC_
+		CM_
+		BA_DEF_
+		BA_
+		VAL_
+		CAT_DEF_
+		CAT_
+		FILTER
+		BA_DEF_DEF_
+		EV_DATA_
+		ENVVAR_DATA_
+		SGTYPE_
+		SGTYPE_VAL_
+		BA_DEF_SGTYPE_
+		BA_SGTYPE_
+		SIG_TYPE_REF_
+		VAL_TABLE_
+		SIG_GROUP_
+		SIG_VALTYPE_
+		SIGTYPE_VALTYPE_
+		BO_TX_BU_
+		BA_DEF_REL_
+		BA_REL_
+		BA_DEF_DEF_REL_
+		BU_SG_REL_
+		BU_EV_REL_
+		BU_BO_REL_
+		SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+
+
+BO_ 13 Brake_Operation_Indicator: 2 Vector__XXX
+	SG_ Brake_Indicator : 0|16@1+ (0.0015259,0) [0|100] "%" Vector__XXX
+
+BO_ 14 Brake_Output_Indicator: 2 Vector__XXX
+	SG_ Brake_Output : 0|16@1+ (0.0015259,0) [0|100] "%" Vector__XXX
+
+BO_ 20 Engine_Start_Button: 1 Vector__XXX
+	SG_ Engine_Start_Stop : 0|1@1- (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 21 Engine_Status: 1 Vector__XXX
+	SG_ Engine_Status_Signal : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 22 Fuel_Amount: 1 Vector__XXX
+	SG_ Fuel_Amount_Signal : 0|6@1+ (1,0) [0|40] "L" Vector__XXX
+
+BO_ 23 Battery_Warning: 1 Vector__XXX
+	SG_ Battery_Status : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 86 Parking_Brake_Status: 1 Vector__XXX
+	SG_ Parking_Brake_Status : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 85 Parking_Brake: 1 Vector__XXX
+	SG_ Parking_Brake_Req : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 65 Engine_Malfunction: 1 Vector__XXX
+	SG_ Engine_Problem : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 7 Horn_Operation: 1 Vector__XXX
+	SG_ Horn_Operation : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+BO_ 8 Horn_Switch: 1 Vector__XXX
+	SG_ Horn_Activation : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+
+BO_ 91 Accelerator_Pedal: 2 Vector__XXX
+	SG_ Accelarator_Position : 0|16@1+ (0.0015259,0) [0|100] "%" Vector__XXX
+
+BO_ 92 Engine_RPM_and_Speed: 4 Vector__XXX
+	SG_ Engine_RPM : 0|16@1+ (0.1373312,0) [0|9000] "RPM" Vector__XXX
+	SG_ Speed_Signal : 16|16@1+ (0.00457771,0) [0|300] "KM/H" Vector__XXX
+
+BO_ 93 Seat_Belt_Alarm: 1 Vector__XXX
+	SG_ Seat_Belt_Alarm_Signal : 0|1@1+ (1,0) [0|1] "ON/OFF" Vector__XXX
+
+
+BA_DEF_ SG_  "SPN" INT 0 524287;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","J1939PG";
+BA_DEF_  "DatabaseVersion" STRING ;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_  "ProtocolType" STRING ;
+BA_DEF_  "DatabaseCompiler" STRING ;
+BA_DEF_DEF_  "SPN" 0;
+BA_DEF_DEF_  "VFrameFormat" "J1939PG";
+BA_DEF_DEF_  "DatabaseVersion" "DEMO PLUS";
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "ProtocolType" "";
+BA_DEF_DEF_  "DatabaseCompiler" "";
+BA_ "ProtocolType" "J1939";
+BA_ "BusType" "CAN";
+BA_ "DatabaseCompiler" "CSS ELECTRONICS (WWW.CSSELECTRONICS.COM)";
+BA_ "DatabaseVersion" "1.0.0";
+
+CM_ SG_ 7 Horn_Operation "Horn Operator Indicator ";
+CM_ SG_ 8 Horn_Activation "Horn Activation Signal";
+CM_ SG_ 13 Brake_Indicator "Brake Operator Indicator";
+CM_ SG_ 14 Brake_Output "Brake Output";
+CM_ SG_ 20 Engine_Start_Stop "Engine Start/Stop Signal";
+CM_ SG_ 21 Engine_Status_Signal "Engine Malfunction Status ";
+CM_ SG_ 22 Fuel_Amount_Signal "Fuel Amount ";
+CM_ SG_ 23 Battery_Status "Battery Status Signal";
+CM_ SG_ 65 Engine_Problem "Engine Malfunction Signal";
+CM_ SG_ 85 Parking_Brake_Req "Parking Brake Req";
+CM_ SG_ 86 Parking_Brake_Status "Parking Brake Status";
+CM_ SG_ 92 Engine_RPM "Engine RPM Signal";
+CM_ SG_ 92 Speed_Signal "Car Speed";
+CM_ SG_ 93 Seat_Belt_Alarm_Signal "Seat Belt OFF Alarm";
