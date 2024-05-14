@@ -3,9 +3,6 @@ import pandas as pd
 import cantools
 import random
 import can
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.ensemble import IsolationForest
 
 class Malicious_generator:
     def __init__(self, real=(0,0)):
