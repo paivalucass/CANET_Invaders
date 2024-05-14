@@ -1,2 +1,2 @@
-# Malicious_CAN_Bus_detector
+# CAN Invaders
 A detection model for malicious messages on CAN Bus 
