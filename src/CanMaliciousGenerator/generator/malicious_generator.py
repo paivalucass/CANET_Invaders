@@ -1,14 +1,18 @@
 import numpy as np
 import pandas as pd
+from CanMaliciousGenerator.CAN_Bus.can_connection import CAN_Bus
 import cantools
 import random
 import can
 
-class Malicious_generator:
+class MaliciousGenerator:
     def __init__(self, real=(0,0)):
         self.real = real
         
-    def create_random_messages(self, amount, id_amount, real=(0,0)):
+    def generate_messages(self, amount, id_amount, real=None, only_one=False, type="random"):
+        if real == None:
+            real = self.real
+            
         id = []
         data = []
         data_array = []
@@ -16,8 +20,12 @@ class Malicious_generator:
         malicious = []
         for x in range(0,amount):
             data = []
-            id.append(float(random.randint(0, id_amount)))
-            dlc.append(float(random.randint(1,8)))
+            # the lowest the id the higher priority it has 
+            if type == "Priority":
+                id.append(0)
+            else:
+                id.append(random.randint(0, id_amount))
+            dlc.append(random.randint(1,8))
 
             for y in range(0,int(dlc[x])):
                 data.append(random.randint(0, 257))
@@ -30,6 +38,11 @@ class Malicious_generator:
             else:
                 malicious.append(True)
 
+        if only_one:
+            bus = CAN_Bus()
+            msg = bus.create_message(id=id[0],dlc=dlc[0],data=data_array[0])
+            return msg
+            
         
         return id, dlc, data_array, malicious
     
@@ -42,8 +55,8 @@ class Malicious_generator:
         flag = 0
         for x in range(0,amount):
             data = []
-            ids.append(float(id))
-            dlcs.append(float(dlc))
+            ids.append(id)
+            dlcs.append(dlc)
             if flag == 0:
                 for y in range(0,dlc):
                     data.append(256)
