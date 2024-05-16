@@ -45,5 +45,5 @@ class CAN_Bus:
         generator = MaliciousGenerator(real=real)
         msg = generator.generate_messages(amount=1,id_amount=200,only_one=True)
         self.send_one(msg=msg)
-        
+    
     
