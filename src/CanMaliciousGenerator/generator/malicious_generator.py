@@ -9,7 +9,7 @@ class MaliciousGenerator:
     def __init__(self, real=(0,0)):
         self.real = real
         
-    def generate_messages(self, amount, id_amount, real=None, only_one=False, type="random"):
+    def generate_messages(self, amount, id_amount, real=None, only_one=False, type="random", bus = None):
         if real == None:
             real = self.real
             
@@ -39,7 +39,6 @@ class MaliciousGenerator:
                 malicious.append(True)
 
         if only_one:
-            bus = CAN_Bus()
             msg = bus.create_message(id=id[0],dlc=dlc[0],data=data_array[0])
             return msg
             

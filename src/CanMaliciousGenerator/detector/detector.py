@@ -13,4 +13,3 @@ class Detector:
         frame_train.columns = labels
         return frame_train
     
-    
