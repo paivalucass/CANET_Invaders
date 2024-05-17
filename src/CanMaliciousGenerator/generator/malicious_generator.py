@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
-from CanMaliciousGenerator.CAN_Bus.can_connection import CAN_Bus
 import cantools
 import random
 import can
+
 
 class MaliciousGenerator:
     def __init__(self, real=(0,0)):
