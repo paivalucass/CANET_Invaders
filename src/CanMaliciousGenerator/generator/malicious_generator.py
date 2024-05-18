@@ -33,7 +33,7 @@ class MaliciousGenerator:
                 data.append(0)
             data_array.append(data)
 
-            if (int(id[x]),int(dlc[x])) in real:
+            if (id[x],dlc[x]) in real:
                 malicious.append(False)
             else:
                 malicious.append(True)
