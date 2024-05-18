@@ -6,7 +6,7 @@ import can
 
 class CAN_Bus:
     def __init__(self, real):
-        self.bus = can.Bus()
+        self.bus = can.Bus(interface="socketcan",channel="can0", bitrate="500000")
         self.generator = MaliciousGenerator(real)
     
     def send_one(self, msg):
@@ -40,8 +40,8 @@ class CAN_Bus:
     #         printer = can.Printer()
     #         can.Notifier(bus, [printer])
             
-    def send_random_message(self, real=[(0,0)]):
-        msg = self.generator.generate_messages(amount=1,id_amount=200,only_one=True, bus=self.bus)
+    def send_random_message(self, bus, real=[(0,0)]):
+        msg = self.generator.generate_messages(amount=1,id_amount=200,only_one=True, bus=bus)
         self.send_one(msg=msg)
     
     
