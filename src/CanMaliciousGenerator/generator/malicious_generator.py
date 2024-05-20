@@ -21,7 +21,7 @@ class MaliciousGenerator:
         for x in range(0,amount):
             data = []
             # the lowest the id the higher priority it has 
-            if type == "Priority":
+            if type == "priority":
                 id.append(0)
             else:
                 id.append(random.randint(0, id_amount))

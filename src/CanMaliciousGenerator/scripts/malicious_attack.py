@@ -7,6 +7,5 @@ bus = CAN_Bus(real=[(7,1),(8,1),(13,2),(14,2),(20,1),(21,1),(22,1),(23,1),(65,1)
 
 while(True):
     bus.send_random_message(bus)
-    time.sleep(0.020)
     
     

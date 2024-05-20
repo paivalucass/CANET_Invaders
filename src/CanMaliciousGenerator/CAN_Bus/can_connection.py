@@ -40,8 +40,8 @@ class CAN_Bus:
     #         printer = can.Printer()
     #         can.Notifier(bus, [printer])
             
-    def send_random_message(self, bus, real=[(0,0)]):
-        msg = self.generator.generate_messages(amount=1,id_amount=200,only_one=True, bus=bus)
+    def send_random_message(self, bus, real=[(0,0)], type="random"):
+        msg = self.generator.generate_messages(amount=1, id_amount=200, only_one=True, bus=bus, type=type)
         self.send_one(msg=msg)
     
     

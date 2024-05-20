@@ -46,7 +46,7 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataframe=None, label='malicious', drop=['id','malicious'], attack_type="random", generator=MaliciousGenerator(), real=[(0,0)]):
+    def classify(self, dataframe=None, label='malicious', drop=['id','dlc','malicious'], attack_type="random", generator=MaliciousGenerator(), real=[(0,0)]):
         dataframe[label] = dataframe[label].astype(int)
         target = dataframe[label]
         features = dataframe.drop(drop,axis=1)
