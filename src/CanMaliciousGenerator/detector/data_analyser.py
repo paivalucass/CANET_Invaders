@@ -30,12 +30,22 @@ class DataAnalyser:
         labeled = open('labeled.txt','w')
         ids = []
         dlcs = []
-        payloads = []
+        byte1_values = []
+        byte2_values = []
+        byte3_values = []
+        byte4_values = []
+        byte5_values = []
+        byte6_values = []
+        byte7_values = []
+        byte8_values = []
         malicious = []
         is_malicious = False
         for message in file:
             payload, id, dlc = self.split_message(message)
-            
+            #AQUI MARIA AQUI AQUIIIII
+            bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
+            bytes_array += [0] * (8 - len(bytes_array))
+
             if not priority:
                 if (int(id,16),int(dlc)) in self.real:
                     malicious.append(False)
@@ -52,13 +62,20 @@ class DataAnalyser:
                     is_malicious = False
             
             ids.append(int(id,16))
-            dlcs.append(int(dlc))
-            payloads.append(int(payload,16))
-            labeled.write(f"{int(id,16)}#{int(dlc)}#{int(payload,16)}#{is_malicious}\n")
-            # Attention! payload threated as one big number, might be a TODO: to separete by bytes
-            
-        labels = ['id','dlc','paylaod','malicious']
-        data = [ids,dlcs,payloads,malicious]
+            dlcs.append(int(dlc))               
+            #labeled.write(f"{int(id,16)}#{int(dlc)}#{mean}#{is_malicious}\n")
+            byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
+            byte1_values.append(byte1)
+            byte2_values.append(byte2)
+            byte3_values.append(byte3)
+            byte4_values.append(byte4)
+            byte5_values.append(byte5)
+            byte6_values.append(byte6)
+            byte7_values.append(byte7)
+            byte8_values.append(byte8)
+        
+        labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
+        data = [ids,dlcs,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]
         
         file.close()
         labeled.close()

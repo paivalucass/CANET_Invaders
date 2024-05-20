@@ -73,14 +73,14 @@ class MaliciousGenerator:
 
         return ids, dlcs, data_array, malicious
     
-    def mix_messages(self, amount_random=400, amount_real=25, range_id=800, real=[(0,0)]):
-        id_m, dlc_m, data_array_m, malicious_m = self.create_random_messages(amount_random, range_id, real)
+    def mix_messages(self, amount_random=400, amount_real=25, range_id=800, real=[(0,0)], type="random"):
+        id_m, dlc_m, data_array_m, malicious_m = self.generate_messages(amount=amount_random, id_amount=range_id, real=real,type=type)
         id = id_m
         dlc = dlc_m
         data_array = data_array_m
         malicious = malicious_m
         for x in range(0,len(real)):
-            id_b, dlc_b, data_array_b, malicious_b = self.create_real_messages(real[x][0],real[x][1],amount_real)
+            id_b, dlc_b, data_array_b, malicious_b = self.create_real_messages(id=real[x][0],dlc=real[x][1],amount=amount_real)
             id = id + id_b
             dlc = dlc + dlc_b
             data_array = data_array + data_array_b
