@@ -4,6 +4,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import IsolationForest
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
+from sklearn import metrics
+from sklearn.metrics import ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
 class Detector:
     def __init__(self, classifier=IsolationForest()):
@@ -46,24 +49,33 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataframe=None, label='malicious', drop=['id','dlc','malicious'], attack_type="random", generator=MaliciousGenerator(), real=[(0,0)]):
-        dataframe[label] = dataframe[label].astype(int)
+    def classify(self, dataframe=None, label='malicious', drop=['malicious'], attack_type="random", generator=MaliciousGenerator(), real=[(0,0)]):
+        dataframe = dataframe.sample(frac=1)
         target = dataframe[label]
+        print(target)
+        target = target.replace([True, False], [-1,1])
+        print(target)
         features = dataframe.drop(drop,axis=1)
         self.classifier.fit(features, target)
-        print(features)
-        print(target)
-     
-        id, dlc, data_array, malicious = generator.mix_messages(amount_random=200,amount_real=10,range_id=100,real=real, type=attack_type)
+
+        id, dlc, data_array, malicious = generator.mix_messages(amount_random=800,amount_real=40,range_id=100,real=real, type=attack_type)
         frame_test = self.create_test_dataframe(id, dlc, data_array, malicious)
-        frame_test[label] = frame_test[label].astype(int)
+        frame_test = frame_test.sample(frac=1)
         test_target = frame_test[label]
+        test_target = test_target.replace([True, False], [-1,1])
         frame_test = frame_test.drop(drop,axis=1)
-        print(frame_test)
-        print(test_target)
         
+
         predictions = self.classifier.predict(frame_test)
         accuracy = accuracy_score(test_target, predictions)
         print(accuracy)
+        
+        print(predictions)
+        
+        confusion_matrix = metrics.confusion_matrix(test_target, predictions)
+        cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels=["Malicious","No Malicious"])
+
+        cm_display.plot()
+        plt.show()
         
         return accuracy
