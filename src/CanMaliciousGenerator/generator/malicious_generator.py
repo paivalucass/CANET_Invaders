@@ -23,6 +23,8 @@ class MaliciousGenerator:
             # the lowest the id the higher priority it has 
             if type == "priority":
                 id.append(0)
+            elif type == "target":
+                id.append(id_amount)
             else:
                 id.append(random.randint(0, id_amount))
             dlc.append(random.randint(1,8))
