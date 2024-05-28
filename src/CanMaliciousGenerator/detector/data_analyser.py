@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 
 class DataAnalyser:
-    def __init__(self, real):
+    def __init__(self, real, dataset=None):
         self.real = real
         self.number_of_runs = 0
+        self.dataset = dataset
         
     def create_dataframe(self, data, labels):
         frame_train = pd.DataFrame(data).T
@@ -24,9 +25,9 @@ class DataAnalyser:
         
         return payload, id, dlc
         
-    def labeler_for_random_messages(self, dataset, priority=False):
+    def labeler_for_random_messages(self, priority=False):
         # splits, label and create a dataframe from a dataset
-        file = open(dataset,'r')
+        file = open(self.dataset,'r')
         labeled = open('labeled.txt','w')
         ids = []
         dlcs = []

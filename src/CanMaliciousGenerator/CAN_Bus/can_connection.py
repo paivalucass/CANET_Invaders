@@ -1,12 +1,11 @@
-from CanMaliciousGenerator.detector.detector import Detector
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
 import cantools
 import can
 
 
 class CAN_Bus:
-    def __init__(self, real):
-        self.bus = can.Bus(interface="socketcan",channel="can0", bitrate="500000")
+    def __init__(self, real, interface="socketcan", channel="can0", bitrate="500000"):
+        self.bus = can.Bus(interface=interface,channel=channel, bitrate=bitrate)
         self.generator = MaliciousGenerator(real)
     
     def send_one(self, msg):
@@ -40,7 +39,7 @@ class CAN_Bus:
     #         printer = can.Printer()
     #         can.Notifier(bus, [printer])
             
-    def send_random_message(self, bus, real=[(0,0)], type="random"):
+    def send_random_message(self, bus, type="random"):
         msg = self.generator.generate_messages(amount=1, id_amount=200, only_one=True, bus=bus, type=type)
         self.send_one(msg=msg)
     
