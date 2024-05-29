@@ -9,7 +9,7 @@ class MaliciousGenerator:
     def __init__(self, real=(0,0)):
         self.real = real
         
-    def generate_messages(self, amount, id_amount, real=None, only_one=False, type="random", bus = None):
+    def generate_messages(self, amount, id_amount, real=None, only_one=False, type="fuzzing", bus = None):
         if real == None:
             real = self.real
             
@@ -21,7 +21,7 @@ class MaliciousGenerator:
         for x in range(0,amount):
             data = []
             # the lowest the id the higher priority it has 
-            if type == "priority":
+            if type == "doS":
                 id.append(0)
             elif type == "target":
                 id.append(id_amount)
@@ -30,7 +30,7 @@ class MaliciousGenerator:
             dlc.append(random.randint(1,8))
 
             for y in range(0,int(dlc[x])):
-                data.append(random.randint(0, 257))
+                data.append(random.randint(0, 255))
             for y in range(int(dlc[x]),8):
                 data.append(0)
             data_array.append(data)
@@ -46,6 +46,26 @@ class MaliciousGenerator:
             
         
         return id, dlc, data_array, malicious
+    
+    def generate_specific_message(self, id, dlc, binary=False, bus= None, type="impersonation"):
+        id_false = id
+        dlc_false = dlc
+        data = []
+        if type == "falsifying":
+            dlc_false = random.randint(1,8)
+            
+        if binary:
+            for y in range(0,dlc_false):
+                data.append(random.randint(0,1))
+            for y in range(dlc_false,8):
+                data.append(0)
+        else:
+            for y in range(0,dlc_false):
+                data.append(random.randint(0, 255))
+            for y in range(dlc_false,8):
+                data.append(0)
+        msg = bus.create_message(id=id,dlc=dlc_false,data=data)
+        return msg 
     
     def create_real_messages(self, id, dlc, amount):
         ids = []
@@ -66,7 +86,7 @@ class MaliciousGenerator:
                     data.append(0)
             else:
                 for y in range(0,dlc):
-                    data.append(random.randint(0, 257))
+                    data.append(random.randint(0, 255))
             for y in range(dlc,8):
                 data.append(0)
             data_array.append(data)
