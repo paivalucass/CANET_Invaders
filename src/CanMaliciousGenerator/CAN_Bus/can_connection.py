@@ -4,7 +4,7 @@ import can
 
 
 class CAN_Bus:
-    def __init__(self, real, interface="socketcan", channel="can0", bitrate="500000"):
+    def __init__(self, real=(0,0), interface="socketcan", channel="can0", bitrate="500000"):
         self.bus = can.Bus(interface=interface,channel=channel, bitrate=bitrate)
         self.generator = MaliciousGenerator(real)
     
@@ -24,8 +24,9 @@ class CAN_Bus:
             except can.CanError:
                 print("ERROR! Message NOT sent")
                 
-    def create_message(self, id, dlc, data=[0,0,0,0,0,0,0,0], extended=False):
-        return can.Message(arbitration_id=id, data=data, dlc=dlc, is_extended_id=extended)
+    ## The malicious distinction is made by the RX/TX bit so set the is_rx to False 
+    def create_message(self, id, dlc, data=[0,0,0,0,0,0,0,0], extended=False, is_rx=False):
+        return can.Message(arbitration_id=id, data=data, dlc=dlc, is_extended_id=extended, is_rx=False)
     
     def receive_one(self):
             try: 
