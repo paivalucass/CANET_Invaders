@@ -1,5 +1,5 @@
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
-import cantools
+#import cantools
 import can
 
 
@@ -40,11 +40,11 @@ class CAN_Bus:
     #         printer = can.Printer()
     #         can.Notifier(bus, [printer])
     
-    def send_message(self, bus, type="fuzzing", id="0", dlc="0"):
+    def send_message(self, bus, type="fuzzing", id=0, dlc=1, binary=0):
         if type == "fuzzing" or type == "doS":
             self.send_random_message(bus=bus, type=type)
         elif type == "impersonation" or type == "falsifying":
-            self.send_specific_message(bus=bus, id=id, dlc=dlc, type=type)
+            self.send_specific_message(bus=bus, id=id, dlc=dlc, type=type, binary=binary)
         else:
             pass
         
@@ -52,6 +52,6 @@ class CAN_Bus:
         msg = self.generator.generate_messages(amount=1, id_amount=200, only_one=True, bus=bus, type=type)
         self.send_one(msg=msg)
         
-    def send_specific_message(self, bus, id="0", dlc="1", type="impersonation"):
-        msg = self.generator.generate_specific_message(id=id, dlc=dlc, bus=bus, type=type)
+    def send_specific_message(self, bus, id=0, dlc=1, type="impersonation", binary=0):
+        msg = self.generator.generate_specific_message(id=id, dlc=dlc, bus=bus, type=type, binary=binary)
         self.send_one(msg=msg)
