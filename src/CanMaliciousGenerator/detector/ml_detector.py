@@ -18,8 +18,6 @@ class Detector:
         return frame_train
     
     def create_test_dataframe(self, id, dlc, data_array, malicious):
-        #lumacoders!!
-        #!!!!!!!!!!!!!!!!!!!1
         byte1_values = []
         byte2_values = []
         byte3_values = []
