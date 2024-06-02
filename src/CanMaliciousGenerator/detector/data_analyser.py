@@ -11,7 +11,7 @@ class DataAnalyser:
         frame_train.columns = labels
         return frame_train
     
-    # (000.005189) can0 00D#4833  <---  messages format look like this
+    # (000.005189) can0 00D#4833  <---  messages format look like this (default log format)
     def split_message(self, message):
         split = message.split()
             
@@ -29,10 +29,10 @@ class DataAnalyser:
         
         return payload, id, dlc, malicious
         
-    def labeler_for_random_messages(self, file):
+    def labeler_for_random_messages(self, file_name):
         # splits, label and create a dataframe from a dataset
         file = open(self.dataset,'r')
-        labeled = open(file,'w')
+        labeled = open(file_name,'w')
         ids = []
         dlcs = []
         byte1_values = []

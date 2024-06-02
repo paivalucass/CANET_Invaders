@@ -6,12 +6,13 @@ argparser = argparse.ArgumentParser(description='CAN Bus Generator of random mes
 argparser.add_argument("dataset", type=str, help='Dataset to use for the CAN Bus')
 argparser.add_argument('-t','--type', type=str, default="random", help='Priority of the messages')
 argparser.add_argument('-f','--file', type=str, default="labeled_dataset.txt", help='File to save the labeled dataset')
+
 args = argparser.parse_args()
 
 data = DataAnalyser(dataset=args.dataset)
 
 try:
-    dataframe = data.labeler_for_random_messages(file=args.file)
+    dataframe = data.labeler_for_random_messages(file_name=args.file)
 except:
     print("Provided dataset can't be used")
             
