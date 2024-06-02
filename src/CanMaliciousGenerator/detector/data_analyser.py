@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 
 class DataAnalyser:
-    def __init__(self, real):
-        self.real = real
+    def __init__(self, dataset=None):
         self.number_of_runs = 0
+        self.dataset = dataset
         
     def create_dataframe(self, data, labels):
         frame_train = pd.DataFrame(data).T
@@ -17,16 +17,21 @@ class DataAnalyser:
             
         msg = split[2]
         msg = msg.split("#")
-            
+        
+        if split[3] == "R":
+            malicious = False
+        else: 
+            malicious = True
+        
         payload = msg[1]
         id = msg[0]
         dlc = (len(payload)/2)
         
-        return payload, id, dlc
+        return payload, id, dlc, malicious
         
-    def labeler_for_random_messages(self, dataset, priority=False):
+    def labeler_for_random_messages(self):
         # splits, label and create a dataframe from a dataset
-        file = open(dataset,'r')
+        file = open(self.dataset,'r')
         labeled = open('labeled.txt','w')
         ids = []
         dlcs = []
@@ -41,29 +46,13 @@ class DataAnalyser:
         malicious = []
         is_malicious = False
         for message in file:
-            payload, id, dlc = self.split_message(message)
-            #AQUI MARIA AQUI AQUIIIII
+            payload, id, dlc, malicious = self.split_message(message)
             bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
             bytes_array += [0] * (8 - len(bytes_array))
 
-            if not priority:
-                if (int(id,16),int(dlc)) in self.real:
-                    malicious.append(False)
-                    is_malicious = False
-                else: 
-                    malicious.append(True)
-                    is_malicious = True
-            else:
-                if id == "000":
-                    malicious.append(True)
-                    is_malicious = True
-                else: 
-                    malicious.append(False)
-                    is_malicious = False
-            
             ids.append(int(id,16))
             dlcs.append(int(dlc))               
-            #labeled.write(f"{int(id,16)}#{int(dlc)}#{mean}#{is_malicious}\n")
+            labeled.write(f"{int(id,16)}#{int(dlc)}#{payload}#{is_malicious}\n")
             byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
             byte1_values.append(byte1)
             byte2_values.append(byte2)

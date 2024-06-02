@@ -1,12 +1,11 @@
-from CanMaliciousGenerator.detector.detector import Detector
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
-import cantools
+#import cantools
 import can
 
 
 class CAN_Bus:
-    def __init__(self, real):
-        self.bus = can.Bus(interface="socketcan",channel="can0", bitrate="500000")
+    def __init__(self, real=(0,0), interface="socketcan", channel="can0", bitrate="500000"):
+        self.bus = can.Bus(interface=interface,channel=channel, bitrate=bitrate)
         self.generator = MaliciousGenerator(real)
     
     def send_one(self, msg):
@@ -25,8 +24,9 @@ class CAN_Bus:
             except can.CanError:
                 print("ERROR! Message NOT sent")
                 
-    def create_message(self, id, dlc, data=[0,0,0,0,0,0,0,0], extended=False):
-        return can.Message(arbitration_id=id, data=data, dlc=dlc, is_extended_id=extended)
+    ## The malicious distinction is made by the RX/TX bit so set the is_rx to False 
+    def create_message(self, id, dlc, data=[0,0,0,0,0,0,0,0], extended=False, is_rx=False):
+        return can.Message(arbitration_id=id, data=data, dlc=dlc, is_extended_id=extended, is_rx=False)
     
     def receive_one(self):
             try: 
@@ -39,9 +39,19 @@ class CAN_Bus:
     #     with can.Bus(receive_own_messages=True) as bus: 
     #         printer = can.Printer()
     #         can.Notifier(bus, [printer])
-            
-    def send_random_message(self, bus, real=[(0,0)], type="random"):
+    
+    def send_message(self, bus, type="fuzzing", id=0, dlc=1, binary=0):
+        if type == "fuzzing" or type == "doS":
+            self.send_random_message(bus=bus, type=type)
+        elif type == "impersonation" or type == "falsifying":
+            self.send_specific_message(bus=bus, id=id, dlc=dlc, type=type, binary=binary)
+        else:
+            pass
+        
+    def send_random_message(self, bus, type="fuzzing"):
         msg = self.generator.generate_messages(amount=1, id_amount=200, only_one=True, bus=bus, type=type)
         self.send_one(msg=msg)
-    
-    
+        
+    def send_specific_message(self, bus, id=0, dlc=1, type="impersonation", binary=0):
+        msg = self.generator.generate_specific_message(id=id, dlc=dlc, bus=bus, type=type, binary=binary)
+        self.send_one(msg=msg)
