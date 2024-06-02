@@ -7,6 +7,7 @@ from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerat
 from sklearn import metrics
 from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from CanMaliciousGenerator.detector.data_analyser import DataAnalyser
 
 class Detector:
     def __init__(self, classifier=IsolationForest()):
@@ -47,20 +48,24 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataframe=None, label='malicious', drop=['malicious'], attack_type="random", generator=MaliciousGenerator(), real=[(0,0)]):
+    def classify(self, dataset=None, file_name="labeled_dataset.txt", label='malicious', drop=['malicious', 'id', 'dlc'], attack_type="fuzzing", generator=MaliciousGenerator()):
+        
+        data = DataAnalyser(dataset=dataset)
+        dataframe = data.label_messages(file_name=file_name)
+        
+        # original dataset 
         dataframe = dataframe.sample(frac=1)
         target = dataframe[label]
-        print(target)
-        target = target.replace([True, False], [-1,1])
-        print(target)
+        print(dataframe)
         features = dataframe.drop(drop,axis=1)
         self.classifier.fit(features, target)
-
-        id, dlc, data_array, malicious = generator.mix_messages(amount_random=800,amount_real=40,range_id=100,real=real, type=attack_type)
+        
+        
+        # creating a test dataset
+        id, dlc, data_array, malicious = generator.mix_messages(data=data, amount_attack=400, amount_real=400, range_id=200, type=attack_type)
         frame_test = self.create_test_dataframe(id, dlc, data_array, malicious)
         frame_test = frame_test.sample(frac=1)
         test_target = frame_test[label]
-        test_target = test_target.replace([True, False], [-1,1])
         frame_test = frame_test.drop(drop,axis=1)
         
 

@@ -11,6 +11,41 @@ class DataAnalyser:
         frame_train.columns = labels
         return frame_train
     
+    def find_id(self):
+        payload = 0
+        id = 0
+        dlc = 0
+        malicious = False
+        file = open(self.dataset,'r')
+        for message in file:
+            payload, id, dlc, malicious  = self.split_message(message)
+            if malicious == -1:
+                file.close()
+                return id, dlc
+            
+    def collect_real(self, amount):
+        count = 0
+        ids = []
+        dlcs = []
+        malicious = []
+        payloads = []
+        file = open(self.dataset, 'r')
+        for message in file:
+            payload, id, dlc, is_malicious = self.split_message(message)
+            if is_malicious == 1:
+                id = int(id,16)
+                dlc = int(dlc)
+                ids.append(id)
+                dlcs.append(dlc)
+                malicious.append(is_malicious)
+                payloads.append(payload)
+                count += 1
+            if count == amount:
+                break
+        file.close()
+        return ids, dlcs, malicious, payloads
+            
+                    
     # (000.005189) can0 00D#4833  <---  messages format look like this (default log format)
     def split_message(self, message):
         split = message.split()
@@ -19,9 +54,9 @@ class DataAnalyser:
         msg = msg.split("#")
         
         if split[3] == "R":
-            malicious = False
+            malicious = 1
         else: 
-            malicious = True
+            malicious = -1
         
         payload = msg[1]
         id = msg[0]
@@ -29,7 +64,7 @@ class DataAnalyser:
         
         return payload, id, dlc, malicious
         
-    def labeler_for_random_messages(self, file_name):
+    def label_messages(self, file_name):
         # splits, label and create a dataframe from a dataset
         file = open(self.dataset,'r')
         labeled = open(file_name,'w')
@@ -46,13 +81,14 @@ class DataAnalyser:
         malicious = []
         is_malicious = False
         for message in file:
-            payload, id, dlc, malicious = self.split_message(message)
+            payload, id, dlc, is_malicious = self.split_message(message)
             bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
             bytes_array += [0] * (8 - len(bytes_array))
 
             ids.append(int(id,16))
             dlcs.append(int(dlc))               
             labeled.write(f"{int(id,16)}#{int(dlc)}#{payload}#{is_malicious}\n")
+            malicious.append(is_malicious)
             byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
             byte1_values.append(byte1)
             byte2_values.append(byte2)
@@ -62,6 +98,7 @@ class DataAnalyser:
             byte6_values.append(byte6)
             byte7_values.append(byte7)
             byte8_values.append(byte8)
+            
         
         labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
         data = [ids,dlcs,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]

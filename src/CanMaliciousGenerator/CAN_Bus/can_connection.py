@@ -53,5 +53,5 @@ class CAN_Bus:
         self.send_one(msg=msg)
         
     def send_specific_message(self, bus, id=0, dlc=1, type="impersonation", binary=0):
-        msg = self.generator.generate_specific_message(id=id, dlc=dlc, bus=bus, type=type, binary=binary)
+        msg = self.generator.generate_specific_message(id=id, dlc=dlc, bus=bus, type=type, binary=binary, message=True)
         self.send_one(msg=msg)
