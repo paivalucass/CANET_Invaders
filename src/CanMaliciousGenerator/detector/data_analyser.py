@@ -29,10 +29,10 @@ class DataAnalyser:
         
         return payload, id, dlc, malicious
         
-    def labeler_for_random_messages(self):
+    def labeler_for_random_messages(self, file):
         # splits, label and create a dataframe from a dataset
         file = open(self.dataset,'r')
-        labeled = open('labeled.txt','w')
+        labeled = open(file,'w')
         ids = []
         dlcs = []
         byte1_values = []
