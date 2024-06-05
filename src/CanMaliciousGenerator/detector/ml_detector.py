@@ -18,7 +18,7 @@ class Detector:
         frame_train.columns = labels
         return frame_train
     
-    def create_test_dataframe(self, id, dlc, data_array, malicious):
+    def create_test_dataframe(self, id, dlc, data_array, malicious, separeted=False):
         byte1_values = []
         byte2_values = []
         byte3_values = []
@@ -27,20 +27,31 @@ class Detector:
         byte6_values = []
         byte7_values = []
         byte8_values = []
+        payloads = []
         
-        for i in range(0, len(data_array)):
-            byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = data_array[i]
-            byte1_values.append(byte1)
-            byte2_values.append(byte2)
-            byte3_values.append(byte3)
-            byte4_values.append(byte4)
-            byte5_values.append(byte5)
-            byte6_values.append(byte6)
-            byte7_values.append(byte7)
-            byte8_values.append(byte8)
-            
-        labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
-        data = [id,dlc,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]
+        if separeted:
+            for i in range(0, len(data_array)):
+                byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = data_array[i]
+                byte1_values.append(byte1)
+                byte2_values.append(byte2)
+                byte3_values.append(byte3)
+                byte4_values.append(byte4)
+                byte5_values.append(byte5)
+                byte6_values.append(byte6)
+                byte7_values.append(byte7)
+                byte8_values.append(byte8)
+                
+            labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
+            data = [id,dlc,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]
+        else: 
+            for i in range(0, len(data_array)):
+                payload = data_array[i]
+                payload[0 : 8] = [''.join(str(x) for x in payload[0 : 8])]
+                payloads.append(int(payload[0]))
+                
+            labels = ['id','dlc','payload','malicious']
+            data = [id,dlc,payloads,malicious]
+                            
         
         frame_test = self.create_dataframe(data=data,labels=labels)
         #shuffle dataframe
@@ -48,10 +59,10 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataset=None, file_name="labeled_dataset.txt", label='malicious', drop=['malicious', 'id', 'dlc'], attack_type="fuzzing", generator=MaliciousGenerator()):
+    def classify(self, dataset=None, file_name="labeled_dataset.txt", label='malicious', drop=['malicious'], attack_type="fuzzing", generator=MaliciousGenerator(), separeted=True):
         
         data = DataAnalyser(dataset=dataset)
-        dataframe = data.label_messages(file_name=file_name)
+        dataframe = data.label_messages(file_name=file_name, separeted=separeted)
         
         # original dataset 
         dataframe = dataframe.sample(frac=1)
@@ -62,9 +73,8 @@ class Detector:
         
         
         # creating a test dataset
-        id, dlc, data_array, malicious = generator.mix_messages(data=data, amount_attack=400, amount_real=400, range_id=200, type=attack_type)
-        frame_test = self.create_test_dataframe(id, dlc, data_array, malicious)
-        frame_test = frame_test.sample(frac=1)
+        id, dlc, data_array, malicious = generator.mix_messages(data=data, amount_attack=1000, amount_real=1000, range_id=200, type=attack_type)
+        frame_test = self.create_test_dataframe(id, dlc, data_array, malicious, separeted=separeted)
         test_target = frame_test[label]
         frame_test = frame_test.drop(drop,axis=1)
         

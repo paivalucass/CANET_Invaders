@@ -64,7 +64,7 @@ class MaliciousGenerator:
             msg = bus.create_message(id=id_false,dlc=dlc_false,data=data)
             return msg
         
-        return id_false, dlc_false, data, True 
+        return id_false, dlc_false, data, -1
     
     def create_real_messages(self, id, dlc, amount):
         ids = []
@@ -130,8 +130,4 @@ class MaliciousGenerator:
         dlc = dlc + dlc_b
         data_array = data_array + data_array_b
         malicious = malicious + malicious_b
-        print(id)
-        print(dlc)
-        print(data_array)
-        print(malicious)
         return id, dlc, data_array, malicious
