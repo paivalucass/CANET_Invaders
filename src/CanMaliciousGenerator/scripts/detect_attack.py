@@ -6,11 +6,10 @@ argparser.add_argument("dataset", type=str, help='Dataset path to use for detect
 argparser.add_argument('-t','--type', type=str, default="fuzzing", help='Priority of the messages')
 argparser.add_argument('-f','--file', type=str, default="labeled_dataset.txt", help='File to save the labeled dataset')
 argparser.add_argument('-m','--model', type=str, default="IsolationForest", help='Model to use for the detection')
+argparser.add_argument('-s','--size', nargs=2, type=int, default=[700000,700000], help='Size of the dataset / Size of the training dataset ! Attention ! if the size of train < size dataset and you havent provided a proper test dataset, the remaining data will be used for testing.')
 args = argparser.parse_args()
 
-model = Detector()
+model = Detector(model=args.model)
 # try:
-model.classify(dataset=args.dataset,file_name=args.file,attack_type=args.type)
-# except:
-#     print("Provided dataset can't be used")
+model.classify(dataset_train=args.dataset,file_name=args.file, size_dataset=args.size[0], size_train=args.size[1])
             

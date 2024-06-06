@@ -66,13 +66,13 @@ class DataAnalyser:
         
         return payload, id, dlc, malicious
         
-    def label_messages(self, file_name, separeted=False):
+    def label_messages(self, file_name, end=700000, start=0):
         # splits, label and create a dataframe from a dataset
+        count = 0
         file = open(self.dataset,'r')
         labeled = open(file_name,'w')
         ids = []
         dlcs = []
-        payloads = []
         byte1_values = []
         byte2_values = []
         byte3_values = []
@@ -84,37 +84,32 @@ class DataAnalyser:
         malicious = []
         is_malicious = False
         for message in file:
+            if count < start:
+                count += 1
+                continue
             payload, id, dlc, is_malicious = self.split_message(message)
-            if separeted:
-                bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
-                bytes_array += [0] * (8 - len(bytes_array))
-                byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
-                byte1_values.append(byte1)
-                byte2_values.append(byte2)
-                byte3_values.append(byte3)
-                byte4_values.append(byte4)
-                byte5_values.append(byte5)
-                byte6_values.append(byte6)
-                byte7_values.append(byte7)
-                byte8_values.append(byte8) 
-            else:
-                bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
-                bytes_array += [0] * (8 - len(bytes_array))
-                bytes_array[0 : 8] = [''.join(str(x) for x in bytes_array[0 : 8])]
-                payloads.append(int(bytes_array[0]))
-                
+            bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
+            bytes_array += [0] * (8 - len(bytes_array))
+            byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
+            byte1_values.append(byte1)
+            byte2_values.append(byte2)
+            byte3_values.append(byte3)
+            byte4_values.append(byte4)
+            byte5_values.append(byte5)
+            byte6_values.append(byte6)
+            byte7_values.append(byte7)
+            byte8_values.append(byte8)  
             malicious.append(is_malicious)
             labeled.write(f"{int(id,16)}#{int(dlc)}#{payload}#{is_malicious}\n")
             ids.append(int(id,16))
-            dlcs.append(int(dlc))     
+            dlcs.append(int(dlc))   
+            count += 1
+            if count == end:
+                break
 
-        if separeted:
-            labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
-            data = [ids,dlcs,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]
-        else:                                           
-            labels = ['id','dlc','payload','malicious']
-            data = [ids,dlcs,payloads,malicious]
-        
+        labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
+        data = [ids,dlcs,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]              
+                                    
         file.close()
         labeled.close()
         
