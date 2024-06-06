@@ -10,7 +10,7 @@ args = argparser.parse_args()
 
 model = Detector()
 # try:
-model.classify(dataset=args.dataset,file_name=args.file)
+model.classify(dataset=args.dataset,file_name=args.file,attack_type=args.type)
 # except:
 #     print("Provided dataset can't be used")
             

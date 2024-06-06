@@ -59,7 +59,7 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataset=None, file_name="labeled_dataset.txt", label='malicious', drop=['malicious'], attack_type="fuzzing", generator=MaliciousGenerator(), separeted=True):
+    def classify(self, dataset=None, file_name="labeled_dataset.txt", label='malicious', drop=['malicious','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8'], attack_type="fuzzing", generator=MaliciousGenerator(), separeted=True):
         
         data = DataAnalyser(dataset=dataset)
         dataframe = data.label_messages(file_name=file_name, separeted=separeted)
@@ -67,17 +67,18 @@ class Detector:
         # original dataset 
         dataframe = dataframe.sample(frac=1)
         target = dataframe[label]
-        print(dataframe)
+        
         features = dataframe.drop(drop,axis=1)
+        print(dataframe)
         self.classifier.fit(features, target)
-        
-        
+        print(target)
         # creating a test dataset
         id, dlc, data_array, malicious = generator.mix_messages(data=data, amount_attack=1000, amount_real=1000, range_id=200, type=attack_type)
         frame_test = self.create_test_dataframe(id, dlc, data_array, malicious, separeted=separeted)
         test_target = frame_test[label]
+        print(frame_test)
+        print(test_target)
         frame_test = frame_test.drop(drop,axis=1)
-        
 
         predictions = self.classifier.predict(frame_test)
         accuracy = accuracy_score(test_target, predictions)

@@ -113,7 +113,7 @@ class DataAnalyser:
             data = [ids,dlcs,byte1_values,byte2_values,byte3_values,byte4_values,byte5_values,byte6_values,byte7_values,byte8_values,malicious]
         else:                                           
             labels = ['id','dlc','payload','malicious']
-            data = [id,dlc,payloads,malicious]
+            data = [ids,dlcs,payloads,malicious]
         
         file.close()
         labeled.close()
