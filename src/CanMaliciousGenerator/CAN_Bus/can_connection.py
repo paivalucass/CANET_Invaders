@@ -1,12 +1,18 @@
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
 #import cantools
 import can
+import pandas as pd
 
 
 class CAN_Bus:
     def __init__(self, interface="socketcan", channel="can0", bitrate="500000"):
         self.bus = can.Bus(interface=interface,channel=channel, bitrate=bitrate)
         self.generator = MaliciousGenerator()
+    
+    def create_dataframe(self, data, labels):
+        frame = pd.DataFrame(data).T
+        frame.columns = labels
+        return frame
     
     def send_one(self, msg):
             # this uses the default configuration (for example from the config file)
@@ -29,18 +35,29 @@ class CAN_Bus:
         return can.Message(arbitration_id=id, data=data, dlc=dlc, is_extended_id=extended, is_rx=False)
     
     def receive_one(self):
-            try: 
-                msg = self.bus.recv()
-                print(f"Message received on {self.bus.channel_info}")
-            except can.CanError:
-                print("ERROR! Message NOT received")
-                
-            return msg
- 
-    # def create_listener(self):
-    #     with can.Bus(receive_own_messages=True) as bus: 
-    #         printer = can.Printer()
-    #         can.Notifier(bus, [printer])
+        try: 
+            msg = self.bus.recv()
+            print(f"Message received on {self.bus.channel_info}")
+        except can.CanError:
+            print("ERROR! Message NOT received")
+            
+        id = msg.arbitration_id
+        data = msg.data.hex()
+        bytes_array = [int(data[i:i+2], 16) for i in range(0, len(data), 2)]
+        bytes_array += [0] * (8 - len(bytes_array))
+        byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array
+        dlc = msg.dlc
+        
+        if msg.is_rx:
+            malicious = "R"
+            
+        else: 
+            malicious = "T"
+            
+        labels = ['id','dlc','byte1','byte2','byte3','byte4','malicious']
+        data = [id, dlc, byte1, byte2, byte3, byte4, malicious]              
+
+        return self.create_dataframe(data,labels)
     
     def send_message(self, bus, type="fuzzing", id=0, dlc=1, binary=0):
         if type == "fuzzing" or type == "doS":

@@ -51,7 +51,7 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataset_train, size_dataset=700000, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious','id','dlc']):
+    def classify(self, dataset_train, size_dataset=700000, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious','byte5','byte6','byte7','byte8']):
         # BEST FEATURES MODEL SO FAR: ID , DLC AND 3 BYTES OF PAYLOAD
         # size of test dataset is size_total-size_train
         #TODO: separete train and test dataset
