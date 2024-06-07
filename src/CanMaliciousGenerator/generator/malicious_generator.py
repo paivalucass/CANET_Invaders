@@ -6,9 +6,9 @@ from CanMaliciousGenerator.detector.data_analyser import DataAnalyser
 
 
 class MaliciousGenerator:
-    def __init__(self, real=(0,0)):
-        self.real = real
-        
+    def __init__(self):
+        pass
+    
     def generate_messages(self, amount, id_amount, only_one=False, type="fuzzing", bus = None):
             
         id = []

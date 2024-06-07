@@ -1,5 +1,6 @@
 from CanMaliciousGenerator.detector.ml_detector import Detector
 import argparse
+from CanMaliciousGenerator.CAN_Bus.can_connection import CAN_Bus
 
 argparser = argparse.ArgumentParser(description='CAN Bus Generator of random messages')
 argparser.add_argument("dataset", type=str, help='Dataset path to use for detection')
@@ -11,5 +12,15 @@ args = argparser.parse_args()
 
 model = Detector(model=args.model)
 # try:
-model.classify(dataset_train=args.dataset,file_name=args.file, size_dataset=args.size[0], size_train=args.size[1])
-            
+classifier = model.classify(dataset_train=args.dataset,file_name=args.file, size_dataset=args.size[0], size_train=args.size[1])
+
+
+bus = CAN_Bus()
+
+while True:
+    msg = bus.receive_message()
+    id = msg.arbitration_id
+    dlc = msg.dlc
+    data = msg.data
+    byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = data
+    

@@ -4,9 +4,9 @@ import can
 
 
 class CAN_Bus:
-    def __init__(self, real=(0,0), interface="socketcan", channel="can0", bitrate="500000"):
+    def __init__(self, interface="socketcan", channel="can0", bitrate="500000"):
         self.bus = can.Bus(interface=interface,channel=channel, bitrate=bitrate)
-        self.generator = MaliciousGenerator(real)
+        self.generator = MaliciousGenerator()
     
     def send_one(self, msg):
             # this uses the default configuration (for example from the config file)
@@ -35,6 +35,8 @@ class CAN_Bus:
             except can.CanError:
                 print("ERROR! Message NOT received")
                 
+            return msg
+ 
     # def create_listener(self):
     #     with can.Bus(receive_own_messages=True) as bus: 
     #         printer = can.Printer()
@@ -46,7 +48,7 @@ class CAN_Bus:
         elif type == "impersonation" or type == "falsifying":
             self.send_specific_message(bus=bus, id=id, dlc=dlc, type=type, binary=binary)
         else:
-            pass
+            ("Attack type not implemented")
         
     def send_random_message(self, bus, type="fuzzing"):
         msg = self.generator.generate_messages(amount=1, id_amount=200, only_one=True, bus=bus, type=type)

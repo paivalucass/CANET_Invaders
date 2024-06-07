@@ -51,7 +51,10 @@ class DataAnalyser:
     # (000.005189) can0 00D#4833  <---  messages format look like this (default log format)
     def split_message(self, message):
         split = message.split()
-            
+        
+        aux = split[0].split(".")
+        time = aux[1].replace(')','')
+        
         msg = split[2]
         msg = msg.split("#")
         
@@ -64,7 +67,7 @@ class DataAnalyser:
         id = msg[0]
         dlc = (len(payload)/2)
         
-        return payload, id, dlc, malicious
+        return payload, id, dlc, malicious, time
         
     def label_messages(self, file_name, end=700000, start=0):
         # splits, label and create a dataframe from a dataset
@@ -82,12 +85,13 @@ class DataAnalyser:
         byte7_values = []
         byte8_values = []
         malicious = []
+        times = []
         is_malicious = False
         for message in file:
             if count < start:
                 count += 1
                 continue
-            payload, id, dlc, is_malicious = self.split_message(message)
+            payload, id, dlc, is_malicious, time = self.split_message(message)
             bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
             bytes_array += [0] * (8 - len(bytes_array))
             byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8 = bytes_array

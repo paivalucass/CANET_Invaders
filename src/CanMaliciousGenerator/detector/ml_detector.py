@@ -51,7 +51,7 @@ class Detector:
         
         return frame_test
     
-    def classify(self, dataset_train, size_dataset=700000, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious']):
+    def classify(self, dataset_train, size_dataset=700000, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious','id','dlc']):
         # BEST FEATURES MODEL SO FAR: ID , DLC AND 3 BYTES OF PAYLOAD
         # size of test dataset is size_total-size_train
         #TODO: separete train and test dataset
@@ -109,14 +109,15 @@ class Detector:
             print("Model still not implemented")
             return None
         
-        if self.model == "IsolationForest" or self.model == "OneClassSVM":
-            print("Classification Report for" + self.model)
-            print(classification_report(target, prediction))
-        else:
-            print("Classification Report for" + self.model)
-            print(classification_report(test_target, prediction))
-        
         if verbose:
+            
+            if self.model == "IsolationForest" or self.model == "OneClassSVM":
+                print("Classification Report for " + self.model)
+                print(classification_report(target, prediction))
+            else:
+                print("Classification Report for " + self.model)
+                print(classification_report(test_target, prediction))
+
             if self.model == "IsolationForest" or self.model == "OneClassSVM":
                 confusion_matrix = metrics.confusion_matrix(target, prediction)
             else:
