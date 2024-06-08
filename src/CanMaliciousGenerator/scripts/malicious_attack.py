@@ -19,3 +19,4 @@ bus = CAN_Bus(interface=args.interface,
 while(True):
     time.sleep(args.sleep)
     bus.send_message(bus, type=args.type, id=args.message[0], dlc=args.message[1], binary=args.message[2])
+    
