@@ -1,14 +1,42 @@
 # CAN Invaders
-A small detection program for malicious messages on CAN Bus 
 
+A IDS (Intrusion Detection System) software for CAN bus malicious attacks.
+
+---
 ### How to run
 
 On terminal:
 
-git clone https://github.com/paivalucass/CAN_Invaders.git
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/paivalucass/CAN_Invaders.git
+    ```
 
-pip install -e 
+2. Install the packages:
+    ```bash
+    pip install -e
+    ```
 
-pip install -r requirements.txt
+3. Install the repository dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Enjoy.
+---
+
+### Usage
+
+The repository has three main features:
+
+1. Attack the CAN bus in three possible ways:
+   1. fuzzing attack
+   2. impersonation attack
+   3. falsifying attack
+   4. doS attack
+
+2. Generate a model from recorded CAN bus attacks
+
+3. Run an IDS system using a model provided when connected to a CAN bus
+
+Choose the params you want to change when running every script on an active CAN Bus. 
+We recommed you make use of the can-utils library for recording the CAN bus traffic to be able to make use of the full potential of this repository.
