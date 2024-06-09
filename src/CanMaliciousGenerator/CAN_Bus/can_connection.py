@@ -1,5 +1,4 @@
 from CanMaliciousGenerator.generator.malicious_generator import MaliciousGenerator
-#import cantools
 import can
 import pandas as pd
 

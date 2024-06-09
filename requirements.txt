@@ -1,5 +1,4 @@
 -e .
-cantools
 python-can
 pandas
 scikit-learn

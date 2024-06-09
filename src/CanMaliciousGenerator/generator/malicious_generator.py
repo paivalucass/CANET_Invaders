@@ -1,5 +1,4 @@
 import numpy as np
-import cantools
 import random
 import can
 from CanMaliciousGenerator.detector.data_analyser import DataAnalyser
