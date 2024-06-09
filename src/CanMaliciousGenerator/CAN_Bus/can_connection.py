@@ -54,8 +54,8 @@ class CAN_Bus:
         else: 
             malicious = "T"
             
-        labels = ['id','dlc','byte1','byte2','byte3','byte4','malicious']
-        data = [id, dlc, byte1, byte2, byte3, byte4, malicious]              
+        labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
+        data = [id, dlc, byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8, malicious]             
 
         return self.create_dataframe(data,labels)
     

@@ -27,6 +27,8 @@ bus = CAN_Bus()
 with open(args.dataset, 'rb') as file:  
     model = pickle.load(file)
 
+log = open ("ids_log.txt", "w")
+
 while True:
     dataframe = bus.receive_one()
     print(dataframe)
@@ -34,6 +36,6 @@ while True:
     features = dataframe.drop(list(drop_feat),axis=1)
     prediction = model.predict(features)
         
-    file.write(f"{dataframe}{prediction[0]}\n")
+    log.write(f"{dataframe}#{prediction[0]}\n")
 
-file.close()
+log.close()
