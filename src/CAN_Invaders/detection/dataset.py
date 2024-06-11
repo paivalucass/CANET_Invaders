@@ -9,43 +9,6 @@ class DatasetCreator:
         frame_train = pd.DataFrame(data).T
         frame_train.columns = labels
         return frame_train
-    
-    # def find_id(self):
-    #     payload = 0
-    #     id = 0
-    #     dlc = 0
-    #     malicious = False
-    #     file = open(self.dataset,'r')
-    #     for message in file:
-    #         payload, id, dlc, malicious  = self.split_message(message)
-    #         if malicious == -1:
-    #             file.close()
-    #             return id, dlc
-            
-    # def collect_real(self, amount):
-    #     count = 0
-    #     ids = []
-    #     dlcs = []
-    #     malicious = []
-    #     payloads = []
-    #     file = open(self.dataset, 'r')
-    #     for message in file:
-    #         payload, id, dlc, is_malicious = self.split_message(message)
-    #         bytes_array = [int(payload[i:i+2], 16) for i in range(0, len(payload), 2)]
-    #         bytes_array += [0] * (8 - len(bytes_array))
-    #         if is_malicious == 1:
-    #             id = int(id,16)
-    #             dlc = int(dlc)
-    #             ids.append(id)
-    #             dlcs.append(dlc)
-    #             malicious.append(is_malicious)
-    #             payloads.append(bytes_array)
-    #             count += 1
-    #         if count == amount:
-    #             break
-    #     file.close()
-    #     return ids, dlcs, malicious, payloads
-            
                     
     # (000.005189) can0 00D#4833  <---  messages format look like this (default log format)
     def split_message(self, message):
