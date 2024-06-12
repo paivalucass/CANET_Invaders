@@ -15,12 +15,13 @@ class Detector:
         frame_train.columns = labels
         return frame_train
     
-    def classify(self, dataset_train, size_dataset=700000, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious']):
+    def classify(self, dataset_train, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious']):
         # TODO: refactor how training and testing dataset are separeted
         # TODO: User doesnt need to know about the dataset size, refactor this ASAP
         # TODO: less arguments on fuction call
         
         data = DatasetCreator(dataset=dataset_train)
+        size_dataset = data.count()
         dataframe = data.label_messages(file_name=file_name, end=size_train)
         target = dataframe[label]
         

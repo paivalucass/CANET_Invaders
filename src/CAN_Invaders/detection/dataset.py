@@ -30,6 +30,13 @@ class DatasetCreator:
         dlc = (len(payload)/2)
         
         return payload, id, dlc, malicious, time
+    
+    def count(self):
+        file = open(self.dataset,'r')
+        for message in file:
+            count += 1
+        file.close()
+        return count
         
     def label_messages(self, file_name, end=700000, start=0):
         # splits, label and create a dataframe from a dataset
@@ -49,6 +56,7 @@ class DatasetCreator:
         malicious = []
         times = []
         is_malicious = False
+        
         for message in file:
             if count < start:
                 count += 1
