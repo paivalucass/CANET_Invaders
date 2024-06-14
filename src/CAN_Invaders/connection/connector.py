@@ -58,7 +58,7 @@ class CAN_Bus:
             malicious = "T"
             
         labels = ['id','dlc','byte1','byte2','byte3','byte4','byte5','byte6','byte7','byte8','malicious']
-        data = [id, dlc, byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8, malicious]      
+        data = [id, dlc, byte1, byte2, byte3, byte4, byte5, byte6, byte7, byte8]      
         
         labels = np.array(labels)
         data = np.array(data)

@@ -32,6 +32,7 @@ class DatasetCreator:
         return payload, id, dlc, malicious, time
     
     def count(self):
+        count = 0
         file = open(self.dataset,'r')
         for message in file:
             count += 1
