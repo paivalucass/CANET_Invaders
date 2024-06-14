@@ -1,6 +1,5 @@
 from CAN_Invaders.detection.detector import Detector
 import argparse
-from CAN_Invaders.connection.connector import CAN_Bus
 import pandas as pd
 import joblib
 
