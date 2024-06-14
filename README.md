@@ -43,7 +43,7 @@ We recommed you make use of the can-utils library for recording the CAN bus traf
 
 ### Virtual Interface using CAN-Utils
 
-For simnplicity, you can use a virtual interface to run this software. With can-utils installed on your machine run:
+For simplicity, you can use a virtual interface to run this software. With can-utils installed on your machine run:
 
     ```bash
     sudo modprobe vcan
