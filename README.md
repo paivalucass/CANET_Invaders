@@ -41,6 +41,8 @@ The repository has three main features:
 Choose the params you want to change when running every script on an active CAN Bus. 
 We recommed you make use of the can-utils library for recording the CAN bus traffic to be able to make use of the full potential of this repository.
 
+---
+
 ### Virtual Interface using CAN-Utils
 
 For simplicity, you can use a virtual interface to run this software. With can-utils installed on your machine run:
