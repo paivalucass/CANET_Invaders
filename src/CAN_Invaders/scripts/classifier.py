@@ -10,7 +10,6 @@ argparser.add_argument('-m','--model', type=str, default="IsolationForest", help
 argparser.add_argument('-s','--size', type=int, default=700000, help='Size of the training dataset, remaining messages will be used for testing')
 argparser.add_argument('-d','--features', nargs=3, type=str, default=["True","True","8"], help='Features to use on dataset (id, dlc, bytes) True or False for id and dlc and 0-8 of bytes to use')
 args = argparser.parse_args()
-
 bytes = int(args.features[2])
 drop = []
 
