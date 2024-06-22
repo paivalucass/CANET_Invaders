@@ -7,5 +7,6 @@ class EthernetDetector:
     def detect(self):
         with open(self.pcap_file, 'rb') as file:
             pcap = savefile.load_savefile(file, verbose=True)
-            for packet in pcap.packets:
-                pass
+            print(pcap)
+            # for packet in pcap.packets:
+            #     pass
