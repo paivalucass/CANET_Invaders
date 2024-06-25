@@ -7,6 +7,8 @@ A IDS (Intrusion Detection System) software for CAN bus malicious attacks.
 
 On terminal:
 
+!We suggest you create an enviroment before installing the dependencies!
+
 1. Clone the repository:
     ```bash
     git clone https://github.com/paivalucass/CAN_Invaders.git
