@@ -47,7 +47,6 @@ class EthernetDetector:
                 audio.extend(sample_bytes)
                 
                 
-                
                 data_both_channels = [int(data_full[i:i+2], 16) for i in range(0, len(data_full), 2)]
                 diff = len(data_both_channels) - stream_data_lenght
                 for i in range(0, len(data_both_channels) - diff):
@@ -57,8 +56,12 @@ class EthernetDetector:
                         channel_1.append(data_both_channels[i])
                 print(channel_0)
                 print(channel_1)
-                data_channel_0.append(channel_0)
-                data_channel_1.append(channel_1)
+                channel_0 = np.array(channel_0)
+                channel_1 = np.array(channel_1)
+                mean_channel0 = np.mean(channel_0)
+                mean_channel1 = np.mean(channel_1)
+                data_channel_0.append(mean_channel0)
+                data_channel_1.append(mean_channel1)
             
         print(len(data_channel_0))
         print(len(data_channel_1))
@@ -67,6 +70,7 @@ class EthernetDetector:
         filtered_df = df.loc[df['Protocol'] == 'IEEE1722'].copy()
         filtered_df['Time_Difference'] = filtered_df['Time'].diff()
         filtered_df = filtered_df.assign(channel0=data_channel_0, channel1=data_channel_1)
+        filtered_df = filtered_df.dropna()
         path = self.csv_file.split('.csv')[0] + '_modified.csv'
         filtered_df.to_csv(path, index=False)
        
@@ -93,11 +97,3 @@ class EthernetDetector:
             stream.stop_stream()
             stream.close()
             p.terminate()
-        
-        
-        # for packet in packets:
-        #     df = df.append({'Time': packet.time, 'Source': packet.src, 'Destination': packet.dst, 'Protocol': packet.proto, 'Length': len(packet), 'Info': packet.summary()}, ignore_index=True)
-        # df['Time_Difference'] = df['Time'].diff()
-        
-        # path = pcap_file.split('.pcap')[0] + '_time_diff.csv'
-        # df.to_csv(path, index=False)
