@@ -4,7 +4,6 @@ import sounddevice as sd
 import numpy as np
 
 
-
 class EthernetDetector:
     def __init__(self, csv_file, pcap_file=None):
         self.csv_file = csv_file
@@ -27,33 +26,29 @@ class EthernetDetector:
             if Raw in packet:
                 channel_0 = []
                 channel_1 = []
-                print("-----------------------------")
-                # print(packet)
-                print((packet[Raw].load).hex())
+                
                 if (packet[Raw].load).hex()[0:2] != '02':
                     continue
                 # get paylod lenght from the frame information
                 stream_data_lenght = int((packet[Raw].load).hex()[40:44], 16)
-                # print(stream_data_lenght)
                 data_full = (packet[Raw].load).hex()[48:]
                 
                 
                 # extract audio sample
-                audio_hex = (packet[Raw].load.hex()[48:48+(stream_data_lenght*2)]) 
-                print("length of audio_hex: ", len(audio_hex))   
-                # print(audio_hex)         
-                sample_bytes = bytearray.fromhex(audio_hex)    
-                # print(sample_bytes)            
+                audio_hex = (packet[Raw].load.hex()[48:48+(stream_data_lenght*2)])     
+                sample_bytes = bytearray.fromhex(audio_hex)              
                 audio.extend(sample_bytes)
-                
                 
                 data_both_channels = [int(data_full[i:i+2], 16) for i in range(0, len(data_full), 2)]
                 diff = len(data_both_channels) - stream_data_lenght
-                for i in range(0, len(data_both_channels) - diff):
-                    if i % 2 == 0:
-                        channel_0.append(data_both_channels[i])
-                    else:
-                        channel_1.append(data_both_channels[i])
+                for i in range(0, len(data_both_channels) - diff, 4):  
+                   
+                    sample_channel_0 = (data_both_channels[i] << 8) | data_both_channels[i + 1]
+                    sample_channel_1 = (data_both_channels[i + 2] << 8) | data_both_channels[i + 3]
+                    
+                    channel_0.append(sample_channel_0)
+                    channel_1.append(sample_channel_1)
+
                 print(channel_0)
                 print(channel_1)
                 channel_0 = np.array(channel_0)
@@ -78,7 +73,7 @@ class EthernetDetector:
             import wave
             print("Saving audio...")
             with wave.open('audio.wav', 'wb') as wf:
-                wf.setnchannels(2)
+                wf.setnchannels(1)
                 wf.setsampwidth(2)
                 wf.setframerate(48000)
                 wf.writeframes(audio)     
@@ -90,7 +85,7 @@ class EthernetDetector:
             print("Playing audio...")
             sample_width = 2
             audio_format = p.get_format_from_width(sample_width)
-            stream = p.open(format=audio_format, channels=2, rate=48000, output=True)
+            stream = p.open(format=audio_format, channels=1, rate=48000, output=True)
             
             audio_bytes = bytes(audio)
             stream.write(audio_bytes)
