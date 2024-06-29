@@ -1,6 +1,5 @@
 import argparse
 from CAN_Invaders.connection.connector import CAN_Bus
-import pandas as pd
 import joblib
 
 
@@ -35,7 +34,7 @@ log = open ("ids_log.txt", "w")
 while True:
     features,labels = bus.receive_one()
     features = features.reshape(1, -1)
-    # the features selection is currently HARD CODED, TODO: find a way to features selection to work 
+    # the features selection is currently HARD CODED, TODO: find a way to make it dynamic
     prediction = model.predict(features)
     
     if prediction[0] == -1:
@@ -44,3 +43,4 @@ while True:
     else:
         print(f"Message:{features[0]}# Detection: Benign\n")
         log.write(f"Message:{features[0]}# Detection: Benign\n")
+    
