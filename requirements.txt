@@ -1,4 +1,6 @@
 -e .
-python-can
-pandas
-scikit-learn
+python-can==4.4.0
+pandas==2.2.2
+scikit-learn==1.5.0
+joblib==1.4.2
+scapy
