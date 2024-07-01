@@ -1,8 +1,7 @@
 import pandas as pd
 from scapy.all import rdpcap, Raw
-from scapy.utils import RawPcapNgReader
-import sounddevice as sd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class EthernetDetector:
@@ -34,11 +33,11 @@ class EthernetDetector:
         
         # label the data
         if type == 'drop':
-            df['Malicious'] = df['Time_Difference'].apply(lambda time: '-1' if time >= time_mean*1.5 else '1')
+            df['Malicious'] = df['Time_Difference'].apply(lambda time: -1 if time >= time_mean*1.5 else 1)
         elif type == 'delay':
-            df['Malicious'] = df['Time_Difference'].apply(lambda time: '-1' if time >= time_mean*1.5 or time <= time_mean*0.8 else '1')
+            df['Malicious'] = df['Time_Difference'].apply(lambda time: -1 if time >= time_mean*1.5 or time <= time_mean*0.8 else 1)
         elif type == 'noise':
-            df['Malicious'] = df['Time_Difference'].apply(lambda time: '-1' if time >= time_mean*1.5 or time <= time_mean*0.8 else '1')
+            df['Malicious'] = df['Time_Difference'].apply(lambda time: -1 if time >= time_mean*1.5 or time <= time_mean*0.8 else 1)
         elif type == 'oos':
             df['Malicious'] = 0
             for i in range(0, len(df)):
@@ -57,12 +56,14 @@ class EthernetDetector:
                         df.loc[i, 'Malicious'] = -1
                     else:
                         df.loc[i, 'Malicious'] = 1
-                df['Malicious'] = df['Time_Difference'].apply(lambda time: '-1' if time >= time_mean*1.5 or time <= time_mean*0.8 else '1')
+                df['Malicious'] = df['Time_Difference'].apply(lambda time: -1 if time >= time_mean*1.5 or time <= time_mean*0.8 else 1)
 
 
         path = self.csv_labeled
         
         df.to_csv(path, index=False)
+        
+        return df
         
     # def detect(self, mono=False, type='drop'):
     
@@ -74,6 +75,7 @@ class EthernetDetector:
         data_channel_0 = []
         data_channel_1 = []
         audio = bytearray()
+        audio_plot = []
         
         print("Processing packets...")
         for packet in packets:
@@ -103,7 +105,8 @@ class EthernetDetector:
                     
                     channel_0.append(sample_channel_0)
                     channel_1.append(sample_channel_1)
-
+                
+                
                 channel_0 = np.array(channel_0)
                 channel_1 = np.array(channel_1)
                 mean_channel0 = np.mean(channel_0)
@@ -113,6 +116,10 @@ class EthernetDetector:
             
 
         df = pd.read_csv(self.csv_file, header=0, dtype={'Time': float, 'Source': str, 'Destination': str, 'Protocol': str, 'Length': int, 'Info': str})
+        
+        df_time = df['Time']
+        
+        
         filtered_df = df.loc[df['Protocol'] == 'IEEE1722'].copy()
         # calculating time difference between packets
         filtered_df['Time_Difference'] = filtered_df['Time'].diff()
@@ -133,7 +140,7 @@ class EthernetDetector:
                 wf.setnchannels(1)
                 wf.setsampwidth(2)
                 wf.setframerate(48000)
-                wf.writeframes(audio)     
+                wf.writeframes(audio)      
                   
         if play_audio:
             import pyaudio

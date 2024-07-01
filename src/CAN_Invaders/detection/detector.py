@@ -15,20 +15,23 @@ class Detector:
         frame_train.columns = labels
         return frame_train
     
-    def classify(self, dataset_train, dataset_test=None, verbose=True, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious']):
-        # TODO: refactor how training and testing dataset are separeted
-        # TODO: User doesnt need to know about the dataset size, refactor this ASAP
-        # TODO: less arguments on fuction call
+    def classify(self, dataset_train, dataset_test=None, verbose=False, size_train = 700000, file_name="labeled_dataset.txt", label='malicious', drop=['malicious'], input_dataframe=False):
         
-        data = DatasetCreator(dataset=dataset_train)
-        size_dataset = data.count()
-        dataframe = data.label_messages(file_name=file_name, end=size_train)
-        target = dataframe[label]
+        if not input_dataframe:
+            data = DatasetCreator(dataset=dataset_train)
+            size_dataset = data.count()
+            dataframe = data.label_messages(file_name=file_name, end=size_train)
+            target = dataframe[label]
         
+        else:
+            dataframe = dataset_train
+            target = dataframe[label]
+            print(dataframe)
+            
         if self.model == "IsolationForest":
             #CONTAMINATION RATE CHANGES ACCORDING TO THE AMOUNT OF MALICIOUS MESSAGES 
-            aux = len([v for v in list(dataframe["malicious"]) if v==-1]) 
-            contamination = aux/len(dataframe["malicious"])
+            aux = len([v for v in list(dataframe[label]) if v==-1]) 
+            contamination = aux/len(dataframe[label])
             classifier=IsolationForest(contamination=contamination, random_state=42)
             features = dataframe.drop(drop,axis=1)
             classifier.fit(features)
