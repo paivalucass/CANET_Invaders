@@ -1,4 +1,4 @@
-from CAN_Invaders.detection.detector import Detector
+from CAN.detection.detector import Detector
 import argparse
 import pandas as pd
 import joblib

@@ -1,5 +1,7 @@
+#!/usr/bin/python3
+
 import argparse
-from CAN_Invaders.connection.connector import CAN_Bus
+from CAN.connection.connector import CAN_Bus
 import joblib
 
 

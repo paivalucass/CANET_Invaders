@@ -1,6 +1,8 @@
+#!/usr/bin/python3
+
 from Ethernet.detection.dataset import EthernetDetector
 #currently using CAN detector module
-from CAN_Invaders.detection.detector import Detector
+from CAN.detection.detector import Detector
 import argparse
 import joblib
 

@@ -1,4 +1,4 @@
-from CAN_Invaders.generation.generator import Generator
+from CAN.generation.generator import Generator
 import can
 import pandas as pd
 import numpy as np

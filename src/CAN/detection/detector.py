@@ -4,7 +4,7 @@ from sklearn.metrics import classification_report
 from sklearn import metrics
 from sklearn.svm import OneClassSVM
 import matplotlib.pyplot as plt
-from CAN_Invaders.detection.dataset import DatasetCreator
+from CAN.detection.dataset import DatasetCreator
 
 class Detector:
     def __init__(self, model="IsolationForest"):
