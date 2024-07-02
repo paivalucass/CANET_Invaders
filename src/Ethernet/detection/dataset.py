@@ -67,8 +67,6 @@ class EthernetDetector:
         
     # def detect(self, mono=False, type='drop'):
     
-    
-    
     def open_pcap(self, play_audio=False, save_audio=True):
         print("Opening pcap file...")
         packets = rdpcap(self.pcap_file)
