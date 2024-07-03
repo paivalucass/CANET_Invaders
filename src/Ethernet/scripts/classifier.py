@@ -17,7 +17,6 @@ argparser.add_argument('-s', '--save', action='store_true', help='Save extracted
 
 args = argparser.parse_args()
 
-
 c = EthernetDetector(args.csv, args.pcap)
 
 c.open_pcap(play_audio=args.play, save_audio=args.save)
