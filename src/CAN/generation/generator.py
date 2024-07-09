@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import can
-from CAN_Invaders.detection.dataset import DatasetCreator
+from CAN.detection.dataset import DatasetCreator
 
 
 class Generator:

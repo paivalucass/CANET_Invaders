@@ -1,4 +1,6 @@
-from CAN_Invaders.connection.connector import CAN_Bus
+#!/usr/bin/python3
+
+from CAN.connection.connector import CAN_Bus
 import argparse
 import time
 

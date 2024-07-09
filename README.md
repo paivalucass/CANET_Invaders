@@ -1,13 +1,13 @@
-# CAN Invaders
+# CANET Invaders
 
-A IDS (Intrusion Detection System) software for CAN bus malicious attacks.
+A IDS (Intrusion Detection System) software for CAN and Automotive Ethernet malicious attacks.
 
 ---
 ### How to run
 
 On terminal:
 
-!We suggest you create an enviroment before installing the dependencies!
+**Attention! It may be interesting to create an enviroment before installing the dependencies**
 
 1. Clone the repository:
     ```bash
@@ -36,21 +36,36 @@ The repository has three main features:
    3. falsifying attack
    4. doS attack
 
-2. Generate a model from recorded CAN bus attacks
+2. Generate a model from recorded CAN bus attacks or Ethernet attacks.
 
-3. Run an IDS system using a model provided when connected to a CAN bus
+3. Run an IDS system using a model provided when connected to a CAN bus or Ethernet interface.  
 
-Choose the params you want to change when running every script on an active CAN Bus. 
 We recommed you make use of the can-utils library for recording the CAN bus traffic to be able to make use of the full potential of this repository.
 
 ---
 
 ### Virtual Interface using CAN-Utils
 
-For simplicity, you can use a virtual interface to run this software. With can-utils installed on your machine run:
+For simplicity, you can use a virtual interface to run this CAN software. With can-utils installed on your machine run:
 
-    ```bash
+    ```
     sudo modprobe vcan
     sudo ip link add dev vcan0 type vcan
     sudo ip link set up vcan0´
+    ```
+
+### Virtual Interface using Ethernet
+
+Also, for simplicity, you can use a virtual Ethernet interface to use this software on. For that, run the following commands:
+
+    ```
+    sudo modporobe dummy 
+    sudo ip link add eth10 type dummy
+    sudo ip link set eth10 up 
+    ```
+
+To see the packages run:
+
+    ```
+    sudo tcpdump -i eth10
     ```
