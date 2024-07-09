@@ -9,6 +9,7 @@ argparser.add_argument('-i', '--interface', type=str, default="eth10", help='Int
 argparser.add_argument('-t', '--time_diff', action='store_true', help='Use time difference as a feature')
 argparser.add_argument('-d', '--channel_diff', action='store_true', help='Use channel difference as a feature')
 argparser.add_argument('-c', '--channel', action='store_true', help='Use channel value as a feature')
+argparser.add_argument('-a', '--avtp', action='store_true', help='Use AVTP timestamp as a feature')
 args = argparser.parse_args()
 
 network = Ethernet(interface=args.interface)
@@ -21,7 +22,7 @@ log = open ("ids_log.txt", "w")
 print(args.time_diff, args.channel_diff, args.channel)
 
 while (True):
-    data = network.receive(time_diff=args.time_diff, channel_diff=args.channel_diff, channel=args.channel)
+    data = network.receive(time_diff=args.time_diff, channel_diff=args.channel_diff, channel=args.channel, avtp_timestamp=args.avtp)
     print(data)
     if data is None:
         continue

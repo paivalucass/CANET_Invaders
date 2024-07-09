@@ -4,7 +4,7 @@ import numpy as np
 # This module uses scapy to send and receive packets
 # Some of these methods may need admin permission (run using sudo)
 class Ethernet:
-    def __init__(self, pcap_file=None, interface="eth0"):
+    def __init__(self, pcap_file=None, interface="eth10"):
         self.pcap_file = pcap_file
         self.interface = interface
         self.last_timestamp = 0
@@ -14,20 +14,35 @@ class Ethernet:
     def send(self, packet):
         sendp(packet, iface=self.interface)
         
-    def receive(self, time_diff=False, channel_diff=False, channel=False):
+    def live_dataset(self, sequence_length=2000):
+        features = []
+        for i in range(0,sequence_length):
+            packet = sniff(iface=self.interface, count=1)
+            if (packet[Raw].load).hex()[0:2] != '02':
+                continue
+        
+    def receive(self, time_diff=False, channel_diff=False, channel=False, avtp_timestamp=False):
         features = []
         packet = sniff(iface=self.interface, count=1)
         packet = packet[0]
         channel_0 = []
         channel_1 = []
+        
         if (packet[Raw].load).hex()[0:2] != '02':
             return None
-        
-        if not time_diff and not channel_diff and not channel:
+                
+        if not time_diff and not channel_diff and not channel and not avtp_timestamp:
             return None
+        
+        if avtp_timestamp:
+            time = int(packet[Raw].load.hex()[24:32], 16)
+            diff = time - self.last_timestamp
+            self.last_timestamp = time
+            features.append(diff)
         
         if time_diff:
             Time_difference = packet.time - self.last_timestamp
+            print(packet.time)
             features.append(Time_difference)
             self.last_timestamp = packet.time
         
@@ -44,7 +59,7 @@ class Ethernet:
                 
                 channel_0.append(sample_channel_0)
                 channel_1.append(sample_channel_1)
-            
+
             channel_0 = np.array(channel_0)
             channel_1 = np.array(channel_1)
             mean_channel0 = np.mean(channel_0)
@@ -73,6 +88,34 @@ class Ethernet:
         while True:
             for packet in packets:
                 sendp(packet, iface=self.interface)
+                
+    def replay_thread(self):
+        from threading import Thread
+        threads = []
+        print("Opening pcap file...")
+        packets = rdpcap(self.pcap_file)
+        print("Sending packets...")
+        for i in range(4):  # Ajuste o número de threads conforme necessário
+            thread = Thread(target=self.replay)
+            thread.start()
+            threads.append(thread)
+        
+        
     
-    def listen(self):
-        sniff(iface=self.interface, prn=lambda x: x.show())
+    def listen_avtp(self):
+        packets = sniff(iface=self.interface, count=1)
+        for packet in packets:
+            print("------")
+            time = int(packet[Raw].load.hex()[24:32], 16)
+            diff = time - self.last_timestamp
+            self.last_timestamp = time
+            print(diff)
+            
+    def listen_epoch(self):
+        packets = sniff(iface=self.interface, count=1)
+        for packet in packets:
+            print("------")
+            diff = packet.time - self.last_timestamp
+            self.last_timestamp = packet.time
+            packets_per_second = 1/diff
+            print(packets_per_second)
